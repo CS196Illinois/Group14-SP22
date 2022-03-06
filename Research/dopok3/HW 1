@@ -1,0 +1,26 @@
+# w/szn averages
+def offensive_value(pts, ast, tos, per, ts):
+    pts_value = pts * 10
+    ast_value = ast * 6.5
+    tos_value = tos * -4.5
+    ts_value = ts / 2
+    return per * ts_value * (pts_value + ast_value + tos_value)
+
+def defensive_value(stls, blks, reb, dtrg):
+    impact_value = (stls + blks) * 8
+    reb_value = reb * 5
+    dtrg_value = 1000 / dtrg
+    return dtrg_value(impact_value + reb_value)
+
+def total_value():
+    return offensive_value + defensive_value
+
+# updated after game... total value with game stats not season averages
+def game_value():
+    avg_player = 809
+    gm_value = (total_value - avg_player)/ 82 
+    return gm_value
+
+# total val. w/szn avg
+def net_value():
+    return total_value + gm_value
