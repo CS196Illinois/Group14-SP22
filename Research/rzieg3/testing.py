@@ -27,3 +27,4 @@ for i in arr:
 
 for i in range(0, 10): # 0 to 10 not inclusive of 10, inclusive of 0
     print(i)
+
