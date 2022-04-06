@@ -91,6 +91,15 @@ class player_stock:
             "tov" : tpg
         }
         return season_avg
+    
+    def share_val(self): #cost of a single share of the player in coin
+        stats = self.per_game_stats()
+        caris_levert = 30.01 #average player calculated based on Caris LeVert career averages
+        player_avg = 0
+        for key in self.stat_key:
+            player_avg += stats[self.stat_key[key]]*self.stat_multi[self.stat_key[key]]*self.stat_shares[self.stat_key[key]]
+        multiplier = player_avg/caris_levert
+        return multiplier*caris_levert
 
     def magic(self): #logic to determine stock
         stats = self.per_game_stats()
@@ -100,9 +109,13 @@ class player_stock:
             initial_stock += stats[self.stat_key[key]]*self.stat_multi[self.stat_key[key]]*self.stat_shares[self.stat_key[key]]
             game_stock += self.boxscore[self.stat_key[key]]*self.stat_multi[self.stat_key[key]]*self.stat_shares[self.stat_key[key]]
         diff = game_stock - initial_stock
-        pct = 1 + (diff/initial_stock)
+        pct = diff/initial_stock
         print(pct)
         return pct
+
+    def coin_diff(self): #net gain/loss of coin
+        pct_diff = self.magic()
+        return pct_diff * self.share_val()
         
 # class team_stock:
 #    def __init__(self, team_abbv, shares, date):
