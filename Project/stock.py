@@ -4,11 +4,12 @@ from os import stat_result
 from sportsipy.nba.teams import Teams
 from sportsipy.nba.roster import Player
 from sportsipy.nba.boxscore import Boxscore
+import pandas as pd
 
 teams = Teams()
 
 class player_stock:    
-    def __init__(self, shares, player_code, date):
+    def __init__(self, shares, player_code):
         self.stat_key = { #keys to access stats
             1 : "pts",
             2 : "reb",
@@ -41,6 +42,16 @@ class player_stock:
         #retrieves player code
         self.name = player_code
         self.player_season = Player(self.name)
+
+        self.ppg = self.player_season.points
+        self.rpg = self.player_season.offensive_rebounds + self.player_season.defensive_rebounds
+        self.apg = self.player_season.assists
+        self.spg = self.player_season.steals
+        self.bpg = self.player_season.blocks
+        self.tpg = self.player_season.turnovers
+        self.gp = self.player_season.games_played
+        
+    def box_score_stats(self, date):
         query = "{:04d}{:02d}{:02d}0{}".format(date.year, date.month, date.day, "CLE") # self.player_season.team_abbreviation
         print(query)
         #retrieves season stats
@@ -50,29 +61,22 @@ class player_stock:
             if self.name == player.player_id:
                 self.bxp = player
                 break
-
-        self.ppg = self.player_season.points
-        self.rpg = self.player_season.offensive_rebounds + self.player_season.defensive_rebounds
-        self.apg = self.player_season.assists
-        self.spg = self.player_season.steals
-        self.bpg = self.player_season.blocks
-        self.tpg = self.player_season.turnovers
-        self.gp = self.player_season.games_played
         #retrieves current game stats
-        self.pts = self.bxp.points
-        self.reb = self.bxp.offensive_rebounds + self.bxp.defensive_rebounds
-        self.ast = self.bxp.assists
-        self.stl = self.bxp.steals
-        self.blk = self.bxp.blocks
-        self.tov = self.bxp.turnovers
-        self.boxscore = {
-            "pts" : self.pts,
-            "reb" : self.reb,
-            "ast" : self.ast,
-            "stl" : self.stl,
-            "blk" : self.blk,
-            "tov" : self.tov
+        pts = self.bxp.points
+        reb = self.bxp.offensive_rebounds + self.bxp.defensive_rebounds
+        ast = self.bxp.assists
+        stl = self.bxp.steals
+        blk = self.bxp.blocks
+        tov = self.bxp.turnovers
+        boxscore = {
+            "pts" : pts,
+            "reb" : reb,
+            "ast" : ast,
+            "stl" : stl,
+            "blk" : blk,
+            "tov" : tov
         }
+        return boxscore
 
     def per_game_stats(self): #generates per game stats of the player
         ppg = self.ppg/self.gp
@@ -101,13 +105,14 @@ class player_stock:
         multiplier = player_avg/caris_levert
         return multiplier*caris_levert
 
-    def magic(self): #logic to determine stock
+    def magic(self, date): #logic to determine stock
+        bx = self.box_score_stats(date)
         stats = self.per_game_stats()
         initial_stock = 0
         game_stock = 0
         for key in self.stat_key:
             initial_stock += stats[self.stat_key[key]]*self.stat_multi[self.stat_key[key]]*self.stat_shares[self.stat_key[key]]
-            game_stock += self.boxscore[self.stat_key[key]]*self.stat_multi[self.stat_key[key]]*self.stat_shares[self.stat_key[key]]
+            game_stock += bx[self.stat_key[key]]*self.stat_multi[self.stat_key[key]]*self.stat_shares[self.stat_key[key]]
         diff = game_stock - initial_stock
         pct = diff/initial_stock
         print(pct)
@@ -185,5 +190,5 @@ test_stock = {
     "blk" : 1,
     "tov" : 1 
 }
-test_player = player_stock(test_stock, 'jamesle01', d)
+test_player = player_stock(test_stock, 'jamesle01')
 # test_team = team_stock(teams("CLE"), 2, d)  #IDK why this isn't working
