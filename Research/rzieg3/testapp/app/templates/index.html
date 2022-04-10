@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> {{ title }} </title>
+    </head>
+    <body>
+        {% for dessert in desserts.keys() %}
+        <div><p>{{dessert}} : {{desserts[dessert]}} </p></div>
+        {% endfor %}
+    </body>
+</html>

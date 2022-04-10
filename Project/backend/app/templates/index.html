@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> NBA Stocks  </title>
+    </head>
+    <body>
+        {% for players in stats.keys() %}
+        <div><p>{{players}} : {{stats[players]}} </p></div>
+        {% endfor %}
+
+    </body>
+</html>
