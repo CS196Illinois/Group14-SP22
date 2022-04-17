@@ -27,20 +27,29 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from sportsipy.nba.teams import Teams
 from sportsipy.nba.schedule import Schedule
-from datetime import date, timedelta
+from datetime import datetime, timedelta
 import random
-stock = player_stock()
+test_stock = {
+    "pts" : 1,
+    "reb" : 1,
+    "ast" : 1,
+    "stl" : 1,
+    "blk" : 1,
+    "tov" : 1 
+}
+stock = player_stock(test_stock, 'jamesle01')
 
-cle = Schedule("CLE")
-sdate = date(2018,3,22)   # start date
-edate = date(2018,4,9)   # end date
+cle = Schedule("CLE", year=2018)
+sdate = datetime(2018, 6, 1)   # start date
+edate = datetime(2018,6,9)   # end date
 prices = [stock.share_val()]
 xs = pd.date_range(sdate, edate-timedelta(days=1), freq='d')
 
-
-for d in xs:
+for i, d in enumerate(xs[1:]):
+    print(i)
     if cle.dataframe['datetime'].isin([d]).any() :
-        pct_change = stock.magic(date)
+        print(d, type(d))
+        pct_change = stock.magic(d)
         prev_value = prices[-1]
         next_value = (prev_value * (pct_change)) + prev_value
         prices.append(next_value)

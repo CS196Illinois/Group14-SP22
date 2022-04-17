@@ -52,11 +52,11 @@ class player_stock:
         self.gp = self.player_season.games_played
         
     def box_score_stats(self, date):
-        query = "{:04d}{:02d}{:02d}0{}".format(date.year, date.month, date.day, "CLE") # self.player_season.team_abbreviation
+        query = "{:04}{:02}{:02}0{}".format(date.year, date.month, date.day, "CLE") # self.player_season.team_abbreviation
         print(query)
         #retrieves season stats
         self.player_game = Boxscore(query)
-        player_there = False;
+        player_there = False
         for player in list(self.player_game.away_players) + list(self.player_game.home_players):
             if self.name == player.player_id:
                 self.bxp = player
