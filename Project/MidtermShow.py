@@ -39,9 +39,9 @@ def player_chart(player_name, player_team, sdate, edate):
         "tov" : 1 
     }
     #player_name= 'butleji01'
-    stock = player_stock(test_stock, player_name, 'MIA')
+    stock = player_stock(test_stock, player_name, player_team)
 
-    team_games = Schedule("MIA", year=2020)
+    team_games = Schedule(player_team, year=str(sdate.year))
     #sdate = datetime(2020, 9, 30)   # start date
     #edate = datetime(2020,10, 11)   # end date
     prices = [stock.share_val()]
@@ -59,3 +59,5 @@ def player_chart(player_name, player_team, sdate, edate):
 
     plt.plot(xs, prices)
     plt.savefig(player_name + '.png')
+
+player_chart('adebaba01', 'MIA', datetime(2020, 9, 30), datetime(2020,10, 11))
