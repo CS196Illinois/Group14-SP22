@@ -54,11 +54,11 @@ class player_stock:
         print(query)
         #retrieves season stats
         self.player_game = Boxscore(query)
-        player_there = False;
-        for player in list(self.player_game.away_players) + list(self.player_game.home_players):
-            if self.name == player.player_id: 
-                self.bxp = player
-                break
+        # player_there = False;
+        # for player in list(self.player_game.away_players) + list(self.player_game.home_players):
+        #     if self.name == player.player_id: 
+        #         self.bxp = player
+        #         break
 
         self.ruyd = self.player_season.rush_yards_per_game
         self.rutd = self.player_season.rush_touchdowns
@@ -72,27 +72,17 @@ class player_stock:
         self.fum = self.player_season.fumbles
         self.gp = self.player_season.games
         #retrieves current game stats
-        self.gruyd = self.bxp.rush_yards
-        self.grutd = self.bxp.rush_touchdowns
-        self.greyd = self.bxp.receiving_yards
-        self.gretd = self.bxp.receiving_touchdowns
-        self.grubr = self.bxp.rush_broken_tackles
-        self.grebr = self.bxp.receiving_broken_tackles
-        self.grucon = self.bxp.rush_yards_after_contact
-        self.gruatt = self.bxp.rush_attempts
-        self.greatt = self.bxp.receptions
-        self.gfum = self.bxp.fumbles
         self.boxscore = {
-            "rush yd" : self.gruyd,
-            "rush td" : self.grutd,
-            "rec yd" : self.greyd,
-            "rec td" : self.gretd,
-            "rush broken" : self.grubr,
-            "rec broken" : self.grebr,
-            "rush yd contact" : self.rucon,
-            "rush att" : self.gruatt,
-            "recep" : self.greatt,
-            "fumb" : self.gfum
+            "rush yd" : self.bxp.rush_yards,
+            "rush td" : self.bxp.rush_touchdowns,
+            "rec yd" : self.bxp.receiving_yards,
+            "rec td" : self.bxp.receiving_touchdowns,
+            "rush broken" : self.bxp.rush_broken_tackles,
+            "rec broken" : self.bxp.receiving_broken_tackles,
+            "rush yd contact" : self.bxp.rush_yards_after_contact,
+            "rush att" : self.bxp.rush_attempts,
+            "recep" : self.bxp.receptions,
+            "fumb" : self.bxp.fumbles
         }
 
     def per_game_stats(self): #generates per game stats of the player
