@@ -1,15 +1,21 @@
 # from curses import reset_prog_mode
 from datetime import datetime
 from os import stat_result
+from pickletools import TAKEN_FROM_ARGUMENT1
+
+from sportsipy.nba.schedule import Schedule
 from sportsipy.nba.teams import Teams
 from sportsipy.nba.roster import Player
 from sportsipy.nba.boxscore import Boxscore
+from sportsipy.nba.schedule import Schedule
 import pandas as pd
+import numpy as np
 
 teams = Teams()
 
 class player_stock:    
-    def __init__(self, shares, player_code):
+    def __init__(self, shares, player_code, team):
+        self.team = team
         self.stat_key = { #keys to access stats
             1 : "pts",
             2 : "reb",
@@ -50,13 +56,18 @@ class player_stock:
         self.bpg = self.player_season.blocks
         self.tpg = self.player_season.turnovers
         self.gp = self.player_season.games_played
-        
+    
+
     def box_score_stats(self, date):
-        query = "{:04}{:02}{:02}0{}".format(date.year, date.month, date.day, "CLE") # self.player_season.team_abbreviation
-        print(query)
-        #retrieves season stats
-        self.player_game = Boxscore(query)
-        player_there = False
+        tm = Schedule(self.team, year=str(date.year))
+        
+        parse_date = "{}-{:02}-{:02}".format(date.year, date.month, date.day)
+        df = tm.dataframe
+        index = np.argwhere(df.datetime.to_numpy() < np.datetime64(parse_date))
+        
+        game_box = index[-1][0]
+        self.player_game = tm[game_box].boxscore
+
         for player in list(self.player_game.away_players) + list(self.player_game.home_players):
             if self.name == player.player_id:
                 self.bxp = player
@@ -181,7 +192,7 @@ class player_stock:
 #        print(pct)
 #        return pct
 
-d = datetime(2018, 6, 8)
+d = datetime(2020, 10, 11)
 test_stock = {
     "pts" : 1,
     "reb" : 1,
@@ -190,5 +201,5 @@ test_stock = {
     "blk" : 1,
     "tov" : 1 
 }
-test_player = player_stock(test_stock, 'jamesle01')
+test_player = player_stock(test_stock, 'butleji01', 'MIA')
 # test_team = team_stock(teams("CLE"), 2, d)  #IDK why this isn't working

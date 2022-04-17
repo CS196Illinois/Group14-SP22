@@ -29,35 +29,33 @@ from sportsipy.nba.teams import Teams
 from sportsipy.nba.schedule import Schedule
 from datetime import datetime, timedelta
 import random
-test_stock = {
-    "pts" : 1,
-    "reb" : 1,
-    "ast" : 1,
-    "stl" : 1,
-    "blk" : 1,
-    "tov" : 1 
-}
-stock = player_stock(test_stock, 'jamesle01')
+def player_chart(player_name, player_team, sdate, edate):
+    test_stock = {
+        "pts" : 1,
+        "reb" : 1,
+        "ast" : 1,
+        "stl" : 1,
+        "blk" : 1,
+        "tov" : 1 
+    }
+    #player_name= 'butleji01'
+    stock = player_stock(test_stock, player_name, 'MIA')
 
-cle = Schedule("CLE", year=2018)
-sdate = datetime(2018, 6, 1)   # start date
-edate = datetime(2018,6,9)   # end date
-prices = [stock.share_val()]
-xs = pd.date_range(sdate, edate-timedelta(days=1), freq='d')
+    team_games = Schedule("MIA", year=2020)
+    #sdate = datetime(2020, 9, 30)   # start date
+    #edate = datetime(2020,10, 11)   # end date
+    prices = [stock.share_val()]
+    xs = pd.date_range(sdate-timedelta(days=1), edate-timedelta(days=1), freq='d')
 
-for i, d in enumerate(xs[1:]):
-    print(i)
-    if cle.dataframe['datetime'].isin([d]).any() :
-        print(d, type(d))
-        pct_change = stock.magic(d)
-        prev_value = prices[-1]
-        next_value = (prev_value * (pct_change)) + prev_value
-        prices.append(next_value)
-    else :
-        prices.append(prices[-1])
+    for i, d in enumerate(xs[1:]):
+        if team_games.dataframe['datetime'].isin([d]).any() :
+            pct_change = stock.magic(d)
+            prev_value = prices[-1]
+            next_value = (prev_value * (pct_change)) + prev_value
+            prices.append(next_value)
+        else :
+            prices.append(prices[-1])
 
 
-
-test_player = player_stock(test_stock, 'jamesle01')
-plt.plot(xs, prices)
-plt.show()
+    plt.plot(xs, prices)
+    plt.savefig(player_name + '.png')
