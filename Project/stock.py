@@ -1,16 +1,12 @@
 # from curses import reset_prog_mode
 from datetime import datetime
 from os import stat_result
-from pickletools import TAKEN_FROM_ARGUMENT1
-
-from openpyxl import NUMPY
-from Project.sportsipy.nba.schedule import Schedule
 from sportsipy.nba.teams import Teams
 from sportsipy.nba.roster import Player
 from sportsipy.nba.boxscore import Boxscore
 from sportsipy.nba.schedule import Schedule
-import pandas as pd
 import numpy as np
+import pandas as pd
 
 teams = Teams()
 
@@ -60,12 +56,12 @@ class player_stock:
     
 
     def box_score_stats(self, date):
-        team_schedule = Schedule(self.team)
+        tm = Schedule(self.team, year=str(date.year))
         
-        parse_date = "" + date.year + "-" + date.month + "-" + date.day
-        tm = Schedule(self.team)
+        parse_date = "{}-{:02}-{:02}".format(date.year, date.month, date.day)
         df = tm.dataframe
         index = np.argwhere(df.datetime.to_numpy() < np.datetime64(parse_date))
+        
         game_box = index[-1][0]
         self.player_game = tm[game_box].boxscore
 
@@ -73,6 +69,8 @@ class player_stock:
             if self.name == player.player_id:
                 self.bxp = player
                 break
+
+        
         #retrieves current game stats
         pts = self.bxp.points
         reb = self.bxp.offensive_rebounds + self.bxp.defensive_rebounds
@@ -193,7 +191,7 @@ class player_stock:
 #        print(pct)
 #        return pct
 
-d = datetime(2020, 10, 11)
+d = datetime(2018, 6, 18)
 test_stock = {
     "pts" : 1,
     "reb" : 1,
@@ -202,5 +200,5 @@ test_stock = {
     "blk" : 1,
     "tov" : 1 
 }
-test_player = player_stock(test_stock, 'butleji01', 'MIA')
+test_player = player_stock(test_stock, 'jamesle01', 'CLE')
 # test_team = team_stock(teams("CLE"), 2, d)  #IDK why this isn't working
