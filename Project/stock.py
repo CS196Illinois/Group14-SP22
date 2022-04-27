@@ -1,20 +1,17 @@
 # from curses import reset_prog_mode
 from datetime import datetime
 from os import stat_result
-from pickletools import TAKEN_FROM_ARGUMENT1
-
-from sportsipy.nba.schedule import Schedule
 from sportsipy.nba.teams import Teams
 from sportsipy.nba.roster import Player
 from sportsipy.nba.boxscore import Boxscore
 from sportsipy.nba.schedule import Schedule
-import pandas as pd
 import numpy as np
+import pandas as pd
 
 teams = Teams()
 
 class player_stock:    
-    def __init__(self, shares, player_code, team):
+    def __init__(self, shares, player_code, team, s):
         self.team = team
         self.stat_key = { #keys to access stats
             1 : "pts",
@@ -48,6 +45,7 @@ class player_stock:
         #retrieves player code
         self.name = player_code
         self.player_season = Player(self.name)
+        self.player_season = self.player_season(s)
 
         self.ppg = self.player_season.points
         self.rpg = self.player_season.offensive_rebounds + self.player_season.defensive_rebounds
@@ -72,6 +70,8 @@ class player_stock:
             if self.name == player.player_id:
                 self.bxp = player
                 break
+
+        
         #retrieves current game stats
         pts = self.bxp.points
         reb = self.bxp.offensive_rebounds + self.bxp.defensive_rebounds
@@ -126,73 +126,20 @@ class player_stock:
             game_stock += bx[self.stat_key[key]]*self.stat_multi[self.stat_key[key]]*self.stat_shares[self.stat_key[key]]
         diff = game_stock - initial_stock
         pct = diff/initial_stock
-        print(pct)
-        return pct
+        return pct**3
 
     def coin_diff(self): #net gain/loss of coin
         pct_diff = self.magic()
         return pct_diff * self.share_val()
         
-# class team_stock:
-#    def __init__(self, team_abbv, shares, date):
-#        self.team_season = Teams(team_abbv)
-#        query = "{:04d}{:02d}{:02d}0{}".format(date.year, date.month, date.day, "CLE") # self.player_season.team_abbreviation
-#        print(query)
-#        #retrieves season stats
-#        self.team_game = Boxscore(query)
-#     #    team_there = False;
-#        if self.abbv == self.team_game.winning_abbr or self.abbv == self.team_game.losing_abbr:
-#            self.bxp = self.team_game
+def season(date):
+    if d.month < 8:
+        return "{}-{}".format(date.year - 1, str(date.year)[-2:])
+    else:
+        return "{}-{}".format(date.year, str(date.year + 1)[-2:])
 
+d = datetime(2010, 6, 16)
 
-#        self.ppg = self.team_season.points
-#        self.rpg = self.team_season.offensive_rebounds + self.player_season.defensive_rebounds
-#        self.apg = self.team_season.assists
-#        self.spg = self.team_season.steals
-#        self.bpg = self.team_season.blocks
-#        self.tpg = self.team_season.turnovers
-#        self.gp = self.team_season.games_played
-#         #retrieves current game stats
-#        self.boxscore = {
-#             "pts" : self.bxp.points,
-#             "reb" : self.bxp.offensive_rebounds + self.bxp.defensive_rebounds,
-#             "ast" : self.bxp.assists,
-#             "stl" : self.bxp.steals,
-#             "blk" : self.bxp.blocks,
-#             "tov" : self.bxp.turnovers
-#        }
-#         #shares user owns of team
-#        self.shares = shares
-
-#    def per_game_stats(self): #generates per game stats of the player
-#        ppg = self.ppg/self.gp
-#        rpg = self.rpg/self.gp
-#        apg = self.apg/self.gp
-#        spg = self.spg/self.gp
-#        bpg = self.bpg/self.gp
-#        tpg = self.tpg/self.gp
-        
-#        season_avg = {
-#            "pts" : ppg,
-#            "reb" : rpg,
-#            "ast" : apg,
-#            "stl" : spg,
-#            "blk" : bpg,
-#            "tov" : tpg
-#        }
-#        return season_avg
-
-#    def magic(self): #logic to determine stock
-#        stats = self.per_game_stats()
-        
-#        initial_stock = stats["Points"] + stats["Rebounds"]*1.2 + stats["Assists"]*1.5 + stats["Blocks"]*3 + stats["Steals"]*3 - stats["Turnovers"]
-#        game_stock = self.pts + self.reb*1.2 + self.ast*1.5 + self.blk*3 + self.stl*3 - self.tov
-#        diff = game_stock - initial_stock
-#        pct = 1 + (diff/initial_stock)
-#        print(pct)
-#        return pct
-
-d = datetime(2020, 10, 11)
 test_stock = {
     "pts" : 1,
     "reb" : 1,
@@ -201,5 +148,4 @@ test_stock = {
     "blk" : 1,
     "tov" : 1 
 }
-test_player = player_stock(test_stock, 'butleji01', 'MIA')
-# test_team = team_stock(teams("CLE"), 2, d)  #IDK why this isn't working
+test_player = player_stock(test_stock, 'bryanko01', 'LAL', season(d))
