@@ -4,9 +4,26 @@
         <title> NBA Stocks  </title>
     </head>
     <body>
-        {% for players in stats.keys() %}
-        <div><p>{{players}} : {{stats[players]}} </p></div>
-        {% endfor %}
-
+        <h1>Player Stock</h1>
+        <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.playername.label }}<br>
+            {{ form.playername(size=32) }}
+        </p>
+        <p>
+            {{ form.year.label }}<br>
+            {{ form.year(size=32) }}
+        </p>
+        <p>
+            {{ form.month.label }}<br>
+            {{ form.month(size=32) }}
+        </p>
+        <p>
+            {{ form.date.label }}<br>
+            {{ form.date(size=32) }}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
     </body>
 </html>
