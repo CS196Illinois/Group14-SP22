@@ -122,23 +122,31 @@ class player_stock:
         initial_stock = 0
         game_stock = 0
         for key in self.stat_key:
-            initial_stock += stats[self.stat_key[key]]*self.stat_multi[self.stat_key[key]]*self.stat_shares[self.stat_key[key]]
-            game_stock += bx[self.stat_key[key]]*self.stat_multi[self.stat_key[key]]*self.stat_shares[self.stat_key[key]]
+            incr = stats[self.stat_key[key]]*self.stat_multi[self.stat_key[key]]*self.stat_shares[self.stat_key[key]]
+            initial_stock += incr
+            g_incr = bx[self.stat_key[key]]*self.stat_multi[self.stat_key[key]]*self.stat_shares[self.stat_key[key]]
+            game_stock += g_incr
         diff = game_stock - initial_stock
         pct = diff/initial_stock
-        return pct**3
+        if pct < .8:
+            return pct**3
+        else:
+            return .8
 
     def coin_diff(self): #net gain/loss of coin
         pct_diff = self.magic()
         return pct_diff * self.share_val()
         
 def season(date):
+    if d.year == 2020:
+        if d.month < 11:
+            return "{}-{}".format(date.year - 1, str(date.year)[-2:])
     if d.month < 8:
         return "{}-{}".format(date.year - 1, str(date.year)[-2:])
     else:
         return "{}-{}".format(date.year, str(date.year + 1)[-2:])
 
-d = datetime(2010, 6, 16)
+d = datetime(2019, 3, 23)
 
 test_stock = {
     "pts" : 1,
@@ -146,6 +154,6 @@ test_stock = {
     "ast" : 1,
     "stl" : 1,
     "blk" : 1,
-    "tov" : 1 
+    "tov" : 1
 }
-test_player = player_stock(test_stock, 'bryanko01', 'LAL', season(d))
+test_player = player_stock(test_stock, 'mcgeeja01', 'LAL', season(d))
