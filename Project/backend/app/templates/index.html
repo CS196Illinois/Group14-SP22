@@ -4,6 +4,7 @@
         <title> NBA Stocks  </title>
     </head>
     <body>
+<<<<<<< HEAD
         <h1>Player Stock</h1>
         <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
@@ -25,5 +26,11 @@
         </p>
         <p>{{ form.submit() }}</p>
     </form>
+=======
+        {% for players in stats.keys() %}
+        <div><p>{{players}} : {{stats[players]}} </p></div>
+        {% endfor %}
+
+>>>>>>> main
     </body>
 </html>
