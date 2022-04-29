@@ -70,7 +70,6 @@ class player_stock:
             if self.name == player.player_id:
                 self.bxp = player
                 break
-
         
         #retrieves current game stats
         pts = self.bxp.points

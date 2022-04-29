@@ -50,15 +50,19 @@ def player_chart(player_name, player_team, sdate, edate):
 
     for i, d in enumerate(xs[1:]):
         if team_games.dataframe['datetime'].isin([d]).any() :
-            pct_change = stock.magic(d)
-            prev_value = prices[-1]
-            next_value = (prev_value * (pct_change)) + prev_value
-            prices.append(next_value)
+            
+            try:
+                pct_change = stock.magic(d)
+                prev_value = prices[-1]
+                next_value = (prev_value * (pct_change)) + prev_value
+                prices.append(next_value)
+            except TypeError:
+                prices.append(prices[-1])
         else :
             prices.append(prices[-1])
 
-
+    plt.switch_backend('Agg')
     plt.plot(xs, prices)
     plt.savefig(player_name + '.png')
 
-player_chart('adebaba01', 'MIA', datetime(2020, 9, 30), datetime(2020,10, 11))
+# player_chart('adebaba01', 'MIA', datetime(2020, 9, 30), datetime(2020,10, 11))

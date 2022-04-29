@@ -12,6 +12,7 @@ def index():
         #print(form.playername.data)
         return redirect('/getplayerstat/'+str(form.playername.data)+"/"+str(form.year.data)+ "/" + str(form.month.data) + "/" + str(form.date.data) + "/" + str(form.team.data))
     return render_template('index.html', title = "stats", form = form)
+
 @app.route('/getplayerstat/<name>/<year>/<month>/<date>/<team>', methods=['GET','POST'])
 def getplayerstat(name, year, month, date, team):
     d = datetime(int(year), int(month), int(date))
@@ -26,7 +27,17 @@ def getplayerstat(name, year, month, date, team):
     }
     test_player = player_stock(test_stock, name, team, s)
     data = str(test_player.magic(d))
-    return data
+
+    if int(year) == 2020:
+        if int(month) < 11:
+            syear = int(year) - 1
+    if int(month) < 8:
+        syear = int(year) - 1
+    else:
+        syear = year
+    sd = datetime(int(syear), 10, 1)
+    player_chart(name, team, sd, d)
+    return render_template('return.html', data=data, namepath="app/"+name+".png")
 
 @app.route('/test', methods=['GET', 'POST'])
 def test():
