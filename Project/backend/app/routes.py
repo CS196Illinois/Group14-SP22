@@ -22,7 +22,7 @@ def getplayerstat(name, year, month, date):
     "blk" : 1,
     "tov" : 1 
     }
-    test_player = player_stock(test_stock, name)
+    test_player = player_stock(test_stock, name, team, season(d))
     data = str(test_player.magic(d))
     return data
 
