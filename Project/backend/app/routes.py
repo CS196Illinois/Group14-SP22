@@ -37,7 +37,7 @@ def getplayerstat(name, year, month, date, team):
         syear = year
     sd = datetime(int(syear), 10, 1)
     player_chart(name, team, sd, d)
-    return render_template('return.html', data=data, namepath="app/"+name+".png")
+    return render_template('return.html', data=data, namepath = name+".png")
 
 @app.route('/test', methods=['GET', 'POST'])
 def test():

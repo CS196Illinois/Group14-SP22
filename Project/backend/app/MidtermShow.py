@@ -63,6 +63,6 @@ def player_chart(player_name, player_team, sdate, edate):
 
     plt.switch_backend('Agg')
     plt.plot(xs, prices)
-    plt.savefig(player_name + '.png')
+    plt.savefig('app/static/' + player_name + '.png')
 
 # player_chart('adebaba01', 'MIA', datetime(2020, 9, 30), datetime(2020,10, 11))
